@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Midlance 70/30 – Maandbasis (Mobiel, v2.5)</title>
+<style>
+:root{
+  --bg:#0b5fff; --bg-weak:#eef2ff; --text:#111827; --muted:#6b7280; --card:#ffffff; --border:#e5e7eb;
+  --radius:14px; --shadow-1:0 6px 16px rgba(0,0,0,.06); --shadow-2:0 10px 28px rgba(0,0,0,.08);
+  --space-1:6px; --space-2:10px; --space-3:14px; --space-4:18px; --space-5:24px;
+  --fs-12:clamp(11px, .8vw, 12px); --fs-14:clamp(12px, 1.2vw, 14px); --fs-16:clamp(14px, 1.4vw, 16px);
+  --fs-18:clamp(16px, 1.8vw, 18px); --fs-22:clamp(18px, 2.4vw, 22px);
+}
+*{box-sizing:border-box} html,body{height:100%}
+body{margin:0;background:#f6f7fb;color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;line-height:1.4;
+-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+.wrap{max-width:860px;margin:0 auto;padding:var(--space-4) var(--space-3) calc(120px + env(safe-area-inset-bottom))}
+.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow-2);padding:var(--space-4)}
+h1{font-size:var(--fs-22);margin:0 0 var(--space-2)} .muted{color:var(--muted);font-size:var(--fs-12)}
+.grid{display:grid;grid-template-columns:1fr;gap:var(--space-3)}
+.field label{display:block;font-weight:600;margin:2px 0 var(--space-2);font-size:var(--fs-14)}
+.field input,.field select{width:100%;height:48px;padding:10px 12px;border:1px solid var(--border);border-radius:12px;background:#fff;font-size:var(--fs-16);
+transition:border-color .2s ease,box-shadow .2s ease,background-color .2s ease}
+.field input:focus-visible,.field select:focus-visible{outline:none;border-color:var(--bg);box-shadow:0 0 0 3px rgba(11,95,255,.15)}
+.field input::-webkit-outer-spin-button,.field input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.row{display:flex;gap:var(--space-2);align-items:center;flex-wrap:wrap}.row .grow{flex:1}
+.check{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--border);border-radius:12px;padding:10px 12px;height:48px;
+transition:border-color .2s ease,box-shadow .2s ease,background-color .2s ease}
+.check:has(input:focus-visible){border-color:var(--bg);box-shadow:0 0 0 3px rgba(11,95,255,.15)}
+.check input{width:20px;height:20px}
+.totals{margin-top:var(--space-3);display:grid;gap:var(--space-3);grid-template-columns:1fr 1fr}
+.tile{background:var(--bg);color:#fff;border-radius:14px;padding:var(--space-3);text-align:center;box-shadow:var(--shadow-1);transition:transform .1s ease}
+@media (pointer:fine){.tile:hover{transform:translateY(-1px)}}
+.tile .lbl{opacity:.9;font-size:var(--fs-12)}
+.tile .big-sm{font-size:clamp(1.05rem,2.5vw,1.15rem);font-weight:800;margin-top:2px}
+.tile .big-lg{font-size:clamp(1.25rem,3.2vw,1.45rem);font-weight:900;margin-top:2px}
+.summary{margin-top:var(--space-3);border:1px solid var(--border);border-radius:14px;overflow:hidden;background:#fff}
+.summary header{padding:var(--space-2) var(--space-3);background:#f9fafb;font-weight:700}
+.summary table{width:100%;border-collapse:collapse}
+.summary td{padding:var(--space-2) var(--space-3);border-top:1px solid #eef2f5;font-size:var(--fs-14)}
+.summary td.val{text-align:right;font-variant-numeric:tabular-nums}
+.ok{color:#059669;font-weight:700}.bad{color:#b91c1c;font-weight:700}
+.stickybar{position:fixed;left:0;right:0;bottom:0;background:color-mix(in srgb,#fff 90%,transparent);backdrop-filter:saturate(140%) blur(6px);
+border-top:1px solid var(--border);padding:var(--space-2) calc(var(--space-3) + env(safe-area-inset-right)) calc(var(--space-2) + env(safe-area-inset-bottom)) calc(var(--space-3) + env(safe-area-inset-left));
+display:flex;gap:var(--space-3);align-items:center;justify-content:space-between}
+.chip{background:var(--bg-weak);color:#1f3fd3;border-radius:999px;padding:6px 10px;font-weight:700}
+.kpi{display:flex;flex-direction:column;min-width:0}.kpi .k{font-size:var(--fs-12);color:var(--muted)}.kpi .v{font-size:clamp(1rem,3vw,1.15rem);font-weight:800}
+@media (min-width:720px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media (prefers-color-scheme: dark){
+  :root{--text:#e8e9ec;--muted:#b1b6c2;--card:#171a21;--border:#2a2f3a;--bg:#5b84ff;--bg-weak:#263055}
+  body{background:#0e1117}.tile{box-shadow:none}
+}
+@media (prefers-reduced-motion: reduce){*{transition:none !important;animation-duration:.001ms !important;animation-iteration-count:1 !important}}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>🔎 Midlance 70/30 – maandbasis</h1>
+      <p class="muted">Mobiel geoptimaliseerd. Wordt automatisch herberekend bij elke wijziging.</p>
+      <div class="grid" id="form">
+        <div class="field">
+          <label>Uurtarief (excl. btw)</label>
+          <input type="number" id="rate" value="100" inputmode="decimal">
+        </div>
+        <div class="field">
+          <label>Uren per maand</label>
+          <input type="number" id="hours" value="160" inputmode="numeric">
+        </div>
+
+        <div class="field">
+          <label>Verdeling consultant/organisatie</label>
+          <div class="row">
+            <select id="splitPreset" class="grow" aria-label="Preset verdeling">
+              <option value="70" selected>70 / 30</option>
+              <option value="75">75 / 25</option>
+              <option value="custom">Aangepast…</option>
+            </select>
+            <input type="text" id="splitCustom" value="70" style="width:40%" aria-label="Percentage consultant">
+          </div>
+          <div class="row">
+            <label class="check"><input type="checkbox" id="vakOn" checked><span>Vakantiegeld 8%</span></label>
+            <label class="check"><input type="checkbox" id="pensOn" checked><span>Pensioen werkgever 1%</span></label>
+          </div>
+        </div>
+      </div>
+
+      <div class="totals">
+        <div class="tile">
+          <div class="lbl">Bruto / maand</div>
+          <div class="big-sm" id="t_gross_mo">—</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Netto / maand</div>
+          <div class="big-lg" id="t_net_mo">—</div>
+        </div>
+      </div>
+
+      <div class="summary">
+        <header>Uitsplitsing</header>
+        <table>
+          <tr>
+            <td>Omzet / jaar <span class="muted">(gebaseerd op 1740 uur/jaar)</span></td>
+            <td class="val" id="s_rev_yr">—</td>
+          </tr>
+          <tr>
+            <td>Budget  (% consultant) / jaar</td>
+            <td class="val" id="s_budget_yr">—</td>
+          </tr>
+          <tr>
+            <td>Werkgeverslasten (indicatief 25%)</td>
+            <td class="val bad" id="s_er_yr">—</td>
+          </tr>
+          <tr>
+            <td>Pensioen werkgever</td>
+            <td class="val bad" id="s_pens_yr">—</td>
+          </tr>
+          <tr>
+            <td>Bruto (incl. vakantiegeld)</td>
+            <td class="val" id="s_gross_yr">—</td>
+          </tr>
+          <tr>
+            <td>Belasting (indicatief)</td>
+            <td class="val bad" id="s_tax_yr">—</td>
+          </tr>
+          <tr>
+            <td><b>Netto / jaar</b></td>
+            <td class="val ok" id="s_net_yr">—</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="stickybar">
+    <span class="chip">Samenvatting</span>
+    <div class="kpi">
+      <span class="k">Bruto / maand</span>
+      <span class="v" id="k_gross_mo">—</span>
+    </div>
+    <div class="kpi">
+      <span class="k">Netto / maand</span>
+      <span class="v" id="k_net_mo">—</span>
+    </div>
+  </div>
+
+<script>
+  const ER_RATE_FIXED = 0.25;
+  const YEAR_HOURS = 1740;
+
+  function parseNum(val){
+    if (typeof val !== 'string') val = String(val ?? '');
+    val = val.replace('%','').replace(',','.');
+    const n = parseFloat(val);
+    return isFinite(n) ? n : 0;
+  }
+  function euro(n){ return 'EUR ' + (isFinite(n)?n:0).toLocaleString('nl-NL',{maximumFractionDigits:0}); }
+  function box1Tax(income){
+    const b=[[38441,0.3582],[76817,0.3748],[1e9,0.495]];let t=0,p=0;
+    for(const [u,r] of b){const d=Math.min(income,u)-p;if(d>0)t+=d*r;p=u;if(income<=u)break;}return t;
+  }
+  function getSplitPct(){
+    const preset=document.getElementById('splitPreset').value;
+    const custom=parseNum(document.getElementById('splitCustom').value);
+    return preset==='custom'?Math.max(0,Math.min(100,custom)):+preset;
+  }
+  function syncSplitUI(){
+    const preset=document.getElementById('splitPreset').value;
+    const input=document.getElementById('splitCustom');
+    input.disabled=(preset!=='custom');
+    if(preset!=='custom'){input.value=preset;}
+    calc();
+  }
+  function calc(){
+    const rate=parseNum(document.getElementById('rate').value);
+    const hours=parseNum(document.getElementById('hours').value);
+    const splitPct=getSplitPct();
+    const vak = document.getElementById('vakOn').checked ? 0.08 : 0.0;
+    const pens = document.getElementById('pensOn').checked ? 0.01 : 0.0;
+
+    const revMo = rate * hours;
+    const revYr = rate * YEAR_HOURS;
+
+    const budgetYr = revYr * (splitPct/100);
+    const grossBase = budgetYr / ((1 + vak) * (1 + ER_RATE_FIXED + pens));
+    const grossIncl = grossBase * (1 + vak);
+
+    const erYear = grossIncl * ER_RATE_FIXED;
+    const pensYear = grossIncl * pens;
+    const tax = box1Tax(grossIncl);
+    const netYr = grossIncl - tax;
+    const netMo = netYr / 12;
+
+    document.getElementById('t_gross_mo').textContent = euro(grossIncl/12);
+    document.getElementById('t_net_mo').textContent = euro(netMo);
+
+    document.getElementById('s_rev_yr').textContent = euro(revYr);
+    document.getElementById('s_budget_yr').textContent = euro(budgetYr) + ' ('+ splitPct +'%)';
+    document.getElementById('s_er_yr').textContent = '− ' + euro(erYear);
+    document.getElementById('s_pens_yr').textContent = '− ' + euro(pensYear);
+    document.getElementById('s_gross_yr').textContent = euro(grossIncl);
+    document.getElementById('s_tax_yr').textContent = '− ' + euro(tax);
+    document.getElementById('s_net_yr').textContent = euro(netYr);
+
+    document.getElementById('k_gross_mo').textContent = euro(grossIncl/12);
+    document.getElementById('k_net_mo').textContent = euro(netMo);
+  }
+  ['rate','hours','splitCustom'].forEach(id=>{
+    const el=document.getElementById(id);
+    el.addEventListener('input', calc);
+    el.addEventListener('change', calc);
+  });
+  document.getElementById('splitPreset').addEventListener('change', syncSplitUI);
+  document.getElementById('vakOn').addEventListener('change', calc);
+  document.getElementById('pensOn').addEventListener('change', calc);
+  syncSplitUI();
+</script>
+</body>
+</html>
